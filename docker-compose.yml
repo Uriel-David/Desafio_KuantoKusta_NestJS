@@ -29,3 +29,11 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
       ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
+
+  store-api:
+    build: ./store-api/
+    entrypoint: ./entrypoint.sh
+    ports:
+      - 3001:3001
+    volumes:
+      - ./store-api/:/home/node/app
