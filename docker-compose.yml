@@ -10,12 +10,16 @@ services:
   adminer:
     image: adminer
     restart: always
+    depends_on:
+      - postgres
     ports:
       - 8080:8080
 
   mongo:
     image: mongo
     restart: always
+    ports:
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
@@ -25,15 +29,33 @@ services:
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongo
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
       ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
 
-  store-api:
-    build: ./store-api/
-    entrypoint: ./entrypoint.sh
-    ports:
-      - 3001:3001
-    volumes:
-      - ./store-api/:/home/node/app
+  #store-api:
+  #  build: ./store-api/
+  #  entrypoint: ./entrypoint.sh
+  #  hostname: store-api
+  #  ports:
+  #    - 3001:3001
+  #  depends_on:
+  #    - service-product
+  #  volumes:
+  #    - ./store-api/:/home/node/app
+  
+  #service-product:
+  #  build: ./service-product/
+  #  entrypoint: ./entrypoint.sh
+  #  hostname: service-product
+  #  ports:
+  #    - 3002:3002
+  #  depends_on:
+  #    - mongo
+  #  environment:
+  #    MONGO_URL: root:root@mongo:27017
+  #  volumes:
+  #    - ./service-product/:/home/node/app
