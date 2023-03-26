@@ -3,17 +3,17 @@ import { Product } from 'src/schemas/product.schema';
 import { ProductDto } from './dtos/product.dto';
 import { ProductsService } from './products.service';
 
-@Controller('products')
+@Controller('store')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
-    @Get()
+    @Get('products')
     async findAll(): Promise<Product[]> {
-        return this.productsService.findAll();
+        return await this.productsService.findAll();
     }
 
-    @Post()
+    @Post('products')
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
-        return this.productsService.create(productDto);
+        return await this.productsService.create(productDto);
     }
 }

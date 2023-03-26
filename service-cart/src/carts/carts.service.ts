@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cart } from 'src/entitys/cart.entity';
+import { Cart } from '../entitys/cart.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,12 +17,28 @@ export class CartService {
         });
     }
 
-    async createCart(cart: Cart): Promise<Cart> {
-        return this.cartsRepository.save(this.cartsRepository.create(cart));
+    async addOrUpdateProductCart(cartOrUserId: string, cart: Cart): Promise<Cart> {
+        try {
+            const userCart = isNaN(Number(cartOrUserId))
+                ? await this.cartsRepository.findOneBy({ shoppingCartId: cartOrUserId })
+                : await this.cartsRepository.findOneBy({ userId: cartOrUserId });
+
+            if (userCart.shoppingCartId === null) {
+                return await this.cartsRepository.save(this.cartsRepository.create(cart));
+            }
+
+            return await this.updateCart(userCart.shoppingCartId, cart);
+        } catch(e) {
+            throw new ForbiddenException(e.message);
+        }
     }
 
-    async updateCart(shoppingCartId: string, cart: Cart): Promise<Cart> {
-        this.cartsRepository.update(shoppingCartId, cart)
-        return this.findOne(cart.userId);
+    private async updateCart(cartOrUserId: string, cart: Cart): Promise<Cart> {
+        try {
+            await this.cartsRepository.update(cartOrUserId, cart)
+            return await this.findOne(cart.userId);
+        } catch(e) {
+            throw new ForbiddenException(e.message);
+        }
     }
 }

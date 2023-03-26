@@ -63,3 +63,14 @@ services:
   #    MONGO_URL: root:root@mongo:27017
   #  volumes:
   #    - ./service-product/:/home/node/app
+
+  #service-cart:
+  #  build: ./service-cart/
+  #  entrypoint: ./entrypoint.sh
+  #  hostname: service-cart
+  #  ports:
+  #    - 3003:3003
+  #  depends_on:
+  #    - postgres
+  #  volumes:
+  #    - ./service-cart/:/home/node/app

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { Cart } from 'src/entitys/cart.entity';
+import { Cart } from '../entitys/cart.entity';
 import { CartService } from './carts.service';
 
 @Controller('store')
@@ -8,22 +8,22 @@ export class CartController {
 
     @Get('carts')
     async findAll(): Promise<Cart[]> {
-        return this.cartsService.findAll();
+        return await this.cartsService.findAll();
     }
 
     @Get('carts/:id')
     async find(@Param() params: any): Promise<Cart> {
-        return this.cartsService.findOne(params.id);
+        return await this.cartsService.findOne(params.id);
     }
 
     @Post('carts')
-    async createCart(@Body() body: Cart): Promise<Cart> {
-        return this.cartsService.createCart(body);
+    async createProductAndCart(@Body() body: Cart): Promise<Cart> {
+        return await this.cartsService.addOrUpdateProductCart(body.userId, body);
     }
 
     @Put('carts/:id')
-    async updateCart(@Body() body: Cart, @Param() params: any): Promise<Cart> {
-        return this.cartsService.updateCart(params.id, body);
+    async updateProductCart(@Body() body: Cart, @Param() params: any): Promise<Cart> {
+        return await this.cartsService.addOrUpdateProductCart(params.id, body);
     }
 }
 
