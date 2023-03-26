@@ -12,13 +12,4 @@ export class AuthController {
     login(@Body() body: User): { token: string } {
         return { token: this.authService.login(body.username, body.password) };
     }
-
-    @UseGuards(JwtGuard)
-    @Get('test-auth')
-    test(@Req() req: any): { name: string } {
-        console.log(req.user);
-        return {
-            name: 'Uriel David',
-        };
-    }
 }
